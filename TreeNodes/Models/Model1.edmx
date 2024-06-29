@@ -1,0 +1,150 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="kunsaa_Model.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'kunsaa_.dbo.Nodes' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="Nodes">
+          <Key>
+            <PropertyRef Name="nodeId" />
+            <PropertyRef Name="nodeName" />
+            <PropertyRef Name="isActive" />
+            <PropertyRef Name="StartDate" />
+          </Key>
+          <Property Name="nodeId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="nodeName" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="ParentNodeId" Type="int" />
+          <Property Name="isActive" Type="bit" Nullable="false" />
+          <Property Name="StartDate" Type="date" Nullable="false" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'kunsaa_.dbo.PERSONS' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="PERSONS">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="NAME" Type="nvarchar" MaxLength="50" />
+          <Property Name="PARENT_ID" Type="int" />
+        </EntityType>
+        <Function Name="GetNodeInfo" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <EntityContainer Name="kunsaa_ModelStoreContainer">
+          <EntitySet Name="Nodes" EntityType="Self.Nodes" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+[Nodes].[nodeId] AS [nodeId], 
+[Nodes].[nodeName] AS [nodeName], 
+[Nodes].[ParentNodeId] AS [ParentNodeId], 
+[Nodes].[isActive] AS [isActive], 
+[Nodes].[StartDate] AS [StartDate]
+FROM [dbo].[Nodes] AS [Nodes]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="PERSONS" EntityType="Self.PERSONS" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+[PERSONS].[ID] AS [ID], 
+[PERSONS].[NAME] AS [NAME], 
+[PERSONS].[PARENT_ID] AS [PARENT_ID]
+FROM [dbo].[PERSONS] AS [PERSONS]</DefiningQuery>
+          </EntitySet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="kunsaa_Model" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Node">
+          <Key>
+            <PropertyRef Name="nodeId" />
+            <PropertyRef Name="nodeName" />
+            <PropertyRef Name="isActive" />
+            <PropertyRef Name="StartDate" />
+          </Key>
+          <Property Name="nodeId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="nodeName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="ParentNodeId" Type="Int32" />
+          <Property Name="isActive" Type="Boolean" Nullable="false" />
+          <Property Name="StartDate" Type="DateTime" Nullable="false" Precision="0" />
+        </EntityType>
+        <EntityType Name="PERSON">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="NAME" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="PARENT_ID" Type="Int32" />
+        </EntityType>
+        <EntityContainer Name="kunsaa_Entities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Nodes" EntityType="Self.Node" />
+          <EntitySet Name="PERSONS" EntityType="Self.PERSON" />
+          <FunctionImport Name="GetNodeInfo" ReturnType="Collection(kunsaa_Model.GetNodeInfo_Result)" />
+        </EntityContainer>
+        <ComplexType Name="GetNodeInfo_Result">
+          <Property Type="Int32" Name="NodeID" Nullable="false" />
+          <Property Type="String" Name="NodeName" Nullable="false" MaxLength="50" />
+          <Property Type="Int32" Name="ParentNodeId" Nullable="true" />
+          <Property Type="Boolean" Name="isActive" Nullable="false" />
+          <Property Type="DateTime" Name="StartDate" Nullable="false" />
+        </ComplexType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="kunsaa_ModelStoreContainer" CdmEntityContainer="kunsaa_Entities">
+          <EntitySetMapping Name="Nodes">
+            <EntityTypeMapping TypeName="kunsaa_Model.Node">
+              <MappingFragment StoreEntitySet="Nodes">
+                <ScalarProperty Name="nodeId" ColumnName="nodeId" />
+                <ScalarProperty Name="nodeName" ColumnName="nodeName" />
+                <ScalarProperty Name="ParentNodeId" ColumnName="ParentNodeId" />
+                <ScalarProperty Name="isActive" ColumnName="isActive" />
+                <ScalarProperty Name="StartDate" ColumnName="StartDate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PERSONS">
+            <EntityTypeMapping TypeName="kunsaa_Model.PERSON">
+              <MappingFragment StoreEntitySet="PERSONS">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="NAME" ColumnName="NAME" />
+                <ScalarProperty Name="PARENT_ID" ColumnName="PARENT_ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="GetNodeInfo" FunctionName="kunsaa_Model.Store.GetNodeInfo">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="kunsaa_Model.GetNodeInfo_Result">
+                <ScalarProperty Name="NodeID" ColumnName="NodeID" />
+                <ScalarProperty Name="NodeName" ColumnName="NodeName" />
+                <ScalarProperty Name="ParentNodeId" ColumnName="ParentNodeId" />
+                <ScalarProperty Name="isActive" ColumnName="isActive" />
+                <ScalarProperty Name="StartDate" ColumnName="StartDate" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="true" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

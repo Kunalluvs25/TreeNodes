@@ -1,0 +1,135 @@
+﻿@model List<TreeNodes.Models.Nodes>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Node Tree</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .node-circle {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+            transition: transform 0.3s ease;
+        }
+
+        .node-active .node-circle {
+            background-color: blue;
+        }
+
+        .node-inactive .node-circle {
+            background-color: gray;
+        }
+
+        .node-content {
+            display: flex;
+            align-items: center;
+            padding-left: 15px;
+        }
+
+        .node:hover .node-circle {
+            transform: scale(1.2);
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-4">
+        <h2 class="mb-4">Node Tree</h2>
+        <div class="node-tree">
+            <ul class="list-unstyled">
+                @foreach (var node in Model)
+                {
+                    <li class="node d-flex align-items-center mb-3 @(node.IsActive ? "node-active" : "node-inactive")">
+                        <div class="node-circle">
+                            @node.NodeName
+                        </div>
+                        <div class="node-content">
+                            <div class="card border-left-3 border-primary">
+                                <div class="card-body">
+                                    <div>ID: @node.NodeId</div>
+                                    <div>Active: @node.IsActive</div>
+                                    <div>Start Date: @node.StartDate.ToShortDateString()</div>
+                                </div>
+                            </div>
+                        </div>
+                        @if (node.Children != null && node.Children.Any())
+                        {
+                            <ul class="list-unstyled pl-5">
+                                @foreach (var child in node.Children)
+                                {
+                                    <li class="node d-flex align-items-center mb-3 @(child.IsActive ? "node-active" : "node-inactive")">
+                                        <div class="node-circle">
+                                            @child.NodeName
+                                        </div>
+                                        <div class="node-content">
+                                            <div class="card border-left-3 border-primary">
+                                                <div class="card-body">
+                                                    <div>ID: @child.NodeId</div>
+                                                    <div>Active: @child.IsActive</div>
+                                                    <div>Start Date: @child.StartDate.ToShortDateString()</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        @if (child.Children != null && child.Children.Any())
+                                        {
+                                            <ul class="list-unstyled pl-5">
+                                                @foreach (var subChild in child.Children)
+                                                {
+                                                    <li class="node d-flex align-items-center mb-3 @(subChild.IsActive ? "node-active" : "node-inactive")">
+                                                        <div class="node-circle">
+                                                            @subChild.NodeName
+                                                        </div>
+                                                        <div class="node-content">
+                                                            <div class="card border-left-3 border-primary">
+                                                                <div class="card-body">
+                                                                    <div>ID: @subChild.NodeId</div>
+                                                                    <div>Active: @subChild.IsActive</div>
+                                                                    <div>Start Date: @subChild.StartDate.ToShortDateString()</div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        @if (subChild.Children != null && subChild.Children.Any())
+                                                        {
+                                                            <ul class="list-unstyled pl-5">
+                                                                @foreach (var subSubChild in subChild.Children)
+                                                                {
+                                                                    <li class="node d-flex align-items-center mb-3 @(subSubChild.IsActive ? "node-active" : "node-inactive")">
+                                                                        <div class="node-circle">
+                                                                            @subSubChild.NodeName
+                                                                        </div>
+                                                                        <div class="node-content">
+                                                                            <div class="card border-left-3 border-primary">
+                                                                                <div class="card-body">
+                                                                                    <div>ID: @subSubChild.NodeId</div>
+                                                                                    <div>Active: @subSubChild.IsActive</div>
+                                                                                    <div>Start Date: @subSubChild.StartDate.ToShortDateString()</div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </li>
+                                                                }
+                                                            </ul>
+                                                        }
+                                                    </li>
+                                                }
+                                            </ul>
+                                        }
+                                    </li>
+                                }
+                            </ul>
+                        }
+                    </li>
+                }
+            </ul>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

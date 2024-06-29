@@ -1,0 +1,80 @@
+﻿@model List<TreeNodes.Models.Nodes>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Tree View</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <style>
+        .tree-node {
+            cursor: pointer;
+        }
+
+        .tree-children {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Tree View</h2>
+
+    <ul>
+        @foreach (var root in Model)
+        {
+            @RenderTree(root)
+        }
+    </ul>
+
+    @helper RenderTree(TreeNodes.Models.Nodes node)
+    {
+        <li>
+            <span class="tree-node glyphicon glyphicon-plus" data-toggle="children-@node.NodeId"></span> @node.NodeName
+            @if (node.Children.Any())
+            {
+                <ul class="tree-children" id="children-@node.NodeId">
+                    @foreach (var child in node.Children)
+                    {
+                        @RenderTree(child)
+                    }
+                </ul>
+            }
+        </li>
+    }
+    <div class="container">
+        <div class="row">
+
+            <div class="col-md-6 offset-md-3">
+                <h2>Detail Page</h2>
+                @* Your existing form code *@
+
+                <a href="@Url.Action("Tree", "Home")" class="btn btn-primary">View Node Info</a>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+
+            <div class="col-md-6 offset-md-3">
+                <h2>CURD Operation</h2>
+                @* Your existing form code *@
+
+                <a href="@Url.Action("CURD", "Home")" class="btn btn-primary">Edit Info</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            $('.tree-node').on('click', function () {
+                var toggleId = $(this).data('toggle');
+                $('#' + toggleId).toggle();
+
+                // Change the icon
+                $(this).toggleClass('glyphicon-plus glyphicon-minus');
+            });
+        });
+    </script>
+</body>
+</html>

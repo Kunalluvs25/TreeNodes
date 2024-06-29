@@ -1,0 +1,164 @@
+﻿@model TreeNodes.Models.Nodes
+
+@{
+    ViewBag.Title = "Edit Node";
+}
+
+<h2>Edit/Create/Delete Node</h2>
+
+
+<div class="form-group">
+    @Html.LabelFor(model => model.NodeId)
+    @Html.TextBoxFor(model => model.NodeId, new { @class = "form-control" })
+    @Html.ValidationMessageFor(model => model.NodeId, "", new { @class = "text-danger" })
+</div>
+
+<div class="form-group">
+    @Html.LabelFor(model => model.NodeName)
+    @Html.TextBoxFor(model => model.NodeName, new { @class = "form-control" })
+</div>
+
+<div class="form-group">
+    @Html.LabelFor(model => model.ParentNodeId)
+    @Html.TextBoxFor(model => model.ParentNodeId, new { @class = "form-control" })
+    @Html.ValidationMessageFor(model => model.ParentNodeId, "", new { @class = "text-danger" })
+</div>
+
+<div class="form-check">
+    @Html.LabelFor(model => model.IsActive, new { @class = "form-check-label" })
+    @Html.CheckBoxFor(model => model.IsActive, new { @class = "form-check-input" })
+</div>
+
+<div class="form-check">
+    @Html.LabelFor(model => model.isNewUser, new { @class = "form-check-label" })
+    @Html.CheckBoxFor(model => model.isNewUser, new { @class = "form-check-input" })
+</div>
+
+<button type="button" class="btn btn-primary" id="submitButton">Save changes</button>
+<button type="button" class="btn btn-danger" id="Btn_del">Delete</button>
+@section scripts {
+    <script>
+        $(document).ready(function () {
+            $('#isNewUser').change(function () {
+                var isChecked = $(this).is(':checked');
+                $('#Btn_del').prop('disabled', isChecked);
+            });
+
+
+            $('#NodeId').on('input', function () {
+                validateIntegerInput(this);
+            });
+
+            $('#ParentNodeId').on('input', function () {
+                validateIntegerInput(this);
+            });
+
+            function validateIntegerInput(input) {
+                var value = $(input).val();
+                if (/^\d*$/.test(value)) {
+                    $(input).removeClass('is-invalid');
+                    $(input).addClass('is-valid');
+                } else {
+                    $(input).removeClass('is-valid');
+                    $(input).addClass('is-invalid');
+                }
+            }
+
+
+            // Optional: Prevent form submission if there are validation errors
+            $('form').submit(function (event) {
+                var invalidInputs = $(this).find('.is-invalid');
+                if (invalidInputs.length > 0) {
+                    invalidInputs.first().focus(); // Optionally focus on the first invalid input
+                    event.preventDefault(); // Prevent form submission
+                }
+            });
+        });
+        $('#submitButton').click(function () {
+            sendDataToController();
+        });
+        $('#Btn_del').click(function () {
+            sendDataToControllerDelete();
+        });
+        function sendDataToController() {
+            var data = {
+                NodeId: $('#NodeId').val(),
+                NodeName: $('#NodeName').val(),
+                ParentNodeId: $('#ParentNodeId').val(),
+                IsActive: $('#IsActive').is(':checked'),
+                IsNewUser: $('#isNewUser').is(':checked')
+            };
+
+            $.ajax({
+                url: '@Url.Action("CURDOperations", "Home")',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(data),
+                success: function (response) {
+                    // Handle success response from server
+                    console.log(response);
+                    if (response == 1) {
+                        alert("Data Submitted");
+                    }
+
+                        if (response.val == 0) {
+                            alert("Server Issue data not submitted");
+                    }
+                    if (response == 103) {
+                        alert("User not found!!");
+
+                    }
+                },
+                error: function (xhr, status, error) {
+                    // Handle error
+                    console.error(xhr.responseText);
+                }
+            });
+        }
+
+
+        function sendDataToControllerDelete() {
+    var data = {
+        NodeId: $('#NodeId').val(),
+        NodeName: $('#NodeName').val(),
+        ParentNodeId: $('#ParentNodeId').val(),
+        IsActive: $('#IsActive').is(':checked'),
+        IsNewUser: $('#isNewUser').is(':checked')
+    };
+
+    $.ajax({
+        url: '@Url.Action("DeleteNode", "Home")',
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify(data),
+        success: function (response) {
+            // Handle success response from server
+            console.log(response);
+            if (response == 1) {
+                alert("Data Submitted");
+            }
+                if (response == 1) {
+                    alert("Data Deleted");
+                }
+
+                if (response.val == 0) {
+                    alert("Server Issue data not submitted");
+                }
+                if (response == 103) {
+                    alert("User not found!!");
+
+                }
+                else {
+                    alert("Server Not Found!!")
+                }
+
+        },
+        error: function (xhr, status, error) {
+            // Handle error
+            console.error(xhr.responseText);
+        }
+    });
+}
+
+    </script>
+}
